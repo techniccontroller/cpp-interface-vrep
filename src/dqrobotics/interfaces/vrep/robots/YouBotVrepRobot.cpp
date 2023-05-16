@@ -1,5 +1,5 @@
 /**
-(C) Copyright 2019-2022 DQ Robotics Developers
+(C) Copyright 2019-2023 DQ Robotics Developers
 
 This file is part of DQ Robotics.
 
@@ -17,10 +17,13 @@ This file is part of DQ Robotics.
     along with DQ Robotics.  If not, see <http://www.gnu.org/licenses/>.
 
 Contributors:
-- Murilo M. Marinho        (murilo@nml.t.u-tokyo.ac.jp)
+- Murilo M. Marinho        (murilomarinho@ieee.org)
+        - Responsible for the original implementation.
+        
+- Juan Jose Quiroz Omana   (juanjqo@g.ecc.u-tokyo.ac.jp)
+        - Added smart pointers, deprecated raw pointers. 
+         (Adapted from DQ_PseudoinverseController.h and DQ_KinematicController.h)
 */
-
-#include<memory>
 
 #include<dqrobotics/robot_modeling/DQ_SerialManipulatorDH.h>
 #include<dqrobotics/robot_modeling/DQ_HolonomicBase.h>
@@ -33,13 +36,45 @@ namespace DQ_robotics
 YouBotVrepRobot::YouBotVrepRobot(const std::string& robot_name, DQ_VrepInterface* vrep_interface): DQ_VrepRobot(robot_name, vrep_interface)
 {
     adjust_ = ((cos(pi/2) + i_*sin(pi/2)) * (cos(pi/4) + j_*sin(pi/4)))*(1+0.5*E_*-0.1*k_);
+    _set_names(robot_name);
+}
 
-    std::vector<std::string> splited_name = strsplit(robot_name_,'#');
+
+/**
+ * @brief Constructor of the YouBotVrepRobot class
+ * 
+ * @param robot_name The name of robot used on the vrep scene.
+ * @param vrep_interface_sptr The DQ_VrepInterface smart pointer.
+ * 
+ *               Example:
+ *               auto vi = std::make_shared<DQ_VrepInterface>(DQ_VrepInterface());
+ *               vi->connect(19997,100,5);
+ *               vi->start_simulation();
+ *               YouBotVrepRobot youbot_vreprobot("youBot", vi);
+ *               auto q = youbot_vreprobot.get_q_from_vrep();
+ *               vi->stop_simulation();
+ *               vi->disconnect();
+ */
+YouBotVrepRobot::YouBotVrepRobot(const std::string& robot_name, const std::shared_ptr<DQ_VrepInterface>& vrep_interface_sptr):DQ_VrepRobot(robot_name, vrep_interface_sptr)
+{
+    adjust_ = ((cos(pi/2) + i_*sin(pi/2)) * (cos(pi/4) + j_*sin(pi/4)))*(1+0.5*E_*-0.1*k_);
+    _set_names(robot_name);
+}
+
+
+/**
+ * @brief _set_names sets the joint_names_ and the base_frame_name_ attributes.
+ * 
+ * @param robot_name The name of robot used on the vrep scene.
+ */
+void YouBotVrepRobot::_set_names(const std::string& robot_name)
+{
+    std::vector<std::string> splited_name = _strsplit(robot_name_,'#');
     std::string robot_label = splited_name[0];
 
     if(robot_label.compare(std::string("youBot")) != 0)
     {
-        std::runtime_error("Expected youBot");
+        throw std::runtime_error("Expected youBot");
     }
 
     std::string robot_index("");
@@ -52,7 +87,6 @@ YouBotVrepRobot::YouBotVrepRobot(const std::string& robot_name, DQ_VrepInterface
         joint_names_.push_back(current_joint_name);
     }
     base_frame_name_ = std::string("youBot");
-
 }
 
 DQ_robotics::DQ_SerialWholeBody YouBotVrepRobot::kinematics()
@@ -83,7 +117,7 @@ DQ_robotics::DQ_SerialWholeBody YouBotVrepRobot::kinematics()
     return kin;
 }
 
-void YouBotVrepRobot::send_q_to_vrep(const VectorXd &q)
+void YouBotVrepRobot::set_configuration_space_positions(const VectorXd &q)
 {
     double x = q(0);
     double y = q(1);
@@ -93,17 +127,16 @@ void YouBotVrepRobot::send_q_to_vrep(const VectorXd &q)
     DQ p = x * i_ + y * j_;
     DQ pose = (1 +E_*0.5*p)*r;
 
-    vrep_interface_->set_joint_positions(joint_names_,q.tail<5>());
-    vrep_interface_->set_object_pose(base_frame_name_, pose * conj(adjust_));
+    _get_interface_ptr()->set_joint_positions(joint_names_,q.tail<5>());
+    _get_interface_ptr()->set_object_pose(base_frame_name_, pose * conj(adjust_));
 }
 
-VectorXd YouBotVrepRobot::get_q_from_vrep()
+VectorXd YouBotVrepRobot::get_configuration_space_positions()
 {
-    DQ base_x = vrep_interface_->get_object_pose(base_frame_name_) * adjust_;
+    DQ base_x = _get_interface_ptr()->get_object_pose(base_frame_name_) * adjust_;
     VectorXd base_t = vec4(translation(base_x));
     double base_phi = rotation_angle(rotation(base_x));
-    VectorXd base_arm_q = vrep_interface_->get_joint_positions(joint_names_);
-
+    VectorXd base_arm_q = _get_interface_ptr()->get_joint_positions(joint_names_);
     VectorXd q(8);
     q << base_t(1), base_t(2), base_phi, base_arm_q;
     return q;

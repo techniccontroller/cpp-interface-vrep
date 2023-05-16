@@ -37,8 +37,10 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
     src/dqrobotics/interfaces/vrep/DQ_VrepInterface.cpp
     src/dqrobotics/interfaces/vrep/DQ_VrepInterfaceMapElement.cpp
     src/dqrobotics/interfaces/vrep/DQ_VrepRobot.cpp
+    src/dqrobotics/interfaces/vrep/DQ_SerialVrepRobot.cpp
     src/dqrobotics/interfaces/vrep/robots/LBR4pVrepRobot.cpp
     src/dqrobotics/interfaces/vrep/robots/YouBotVrepRobot.cpp
+    src/dqrobotics/interfaces/vrep/robots/FrankaEmikaPandaVrepRobot.cpp
     coppeliarobotics/remoteApi/extApi.c
     coppeliarobotics/remoteApi/extApiPlatform.c
     )
@@ -66,6 +68,7 @@ endif()
 # Other Headers
 INSTALL(FILES
     include/dqrobotics/interfaces/vrep/DQ_VrepRobot.h
+    include/dqrobotics/interfaces/vrep/DQ_SerialVrepRobot.h
     include/dqrobotics/interfaces/vrep/DQ_VrepInterfaceMapElement.h
     DESTINATION "include/dqrobotics/interfaces/vrep")
 
@@ -73,6 +76,7 @@ INSTALL(FILES
 INSTALL(FILES
     include/dqrobotics/interfaces/vrep/robots/LBR4pVrepRobot.h
     include/dqrobotics/interfaces/vrep/robots/YouBotVrepRobot.h
+    include/dqrobotics/interfaces/vrep/robots/FrankaEmikaPandaVrepRobot.h
     DESTINATION "include/dqrobotics/interfaces/vrep/robots")
 
 ################################################################
@@ -84,10 +88,12 @@ INSTALL(FILES
     src/dqrobotics/interfaces/vrep/DQ_VrepInterface.cpp
     src/dqrobotics/interfaces/vrep/DQ_VrepInterfaceMapElement.cpp
     src/dqrobotics/interfaces/vrep/DQ_VrepRobot.cpp
+    src/dqrobotics/interfaces/vrep/DQ_SerialVrepRobot.cpp
     DESTINATION "src/dqrobotics/interfaces/vrep")
 
 # robots folder
 INSTALL(FILES
     src/dqrobotics/interfaces/vrep/robots/LBR4pVrepRobot.cpp
     src/dqrobotics/interfaces/vrep/robots/YouBotVrepRobot.cpp
+    src/dqrobotics/interfaces/vrep/robots/FrankaEmikaPandaVrepRobot.cpp
     DESTINATION "src/dqrobotics/interfaces/vrep/robots")
