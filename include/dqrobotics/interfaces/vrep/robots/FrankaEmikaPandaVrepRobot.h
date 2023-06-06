@@ -24,7 +24,7 @@ Contributors:
 #pragma once
 #include <vector>
 #include <dqrobotics/interfaces/vrep/DQ_SerialVrepRobot.h>
-#include <dqrobotics/robot_modeling/DQ_SerialManipulatorMDH.h>
+//#include <dqrobotics/robot_modeling/DQ_SerialManipulatorMDH.h>
 
 namespace DQ_robotics
 {
@@ -34,7 +34,7 @@ public:
     FrankaEmikaPandaVrepRobot(const std::string& robot_name,
                               const std::shared_ptr<DQ_VrepInterface>& vrep_interface_sptr);
 
-    DQ_SerialManipulatorMDH kinematics();
+    /*DQ_SerialManipulatorMDH kinematics();*/
 };
 }
 
