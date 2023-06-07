@@ -93,8 +93,8 @@ public:
 
     std::vector<int> get_object_handles(const std::vector<std::string>& objectnames);
 
-    std::vector<Vector3d> get_object_bbox(const int &handle, const int &relative_to_handle, const OP_MODES &opmode);
-    std::vector<Vector3d> get_object_bbox(const std::string& objectname, const std::string& relative_to_objectname=VREP_OBJECTNAME_ABSOLUTE, const OP_MODES& opmode=OP_AUTOMATIC);
+    Eigen::Array<double, 2, 3> get_object_bbox(const int &handle, const int &relative_to_handle, const OP_MODES &opmode);
+    Eigen::Array<double, 2, 3> get_object_bbox(const std::string& objectname, const std::string& relative_to_objectname=VREP_OBJECTNAME_ABSOLUTE, const OP_MODES& opmode=OP_AUTOMATIC);
 
     DQ   get_object_translation(const int& handle, const int& relative_to_handle, const OP_MODES& opmode);
     DQ   get_object_translation(const int& handle, const std::string& relative_to_objectname, const OP_MODES& opmode);

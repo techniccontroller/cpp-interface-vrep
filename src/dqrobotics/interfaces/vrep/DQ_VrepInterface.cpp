@@ -554,7 +554,7 @@ std::vector<int> DQ_VrepInterface::get_object_handles(const std::vector<std::str
  * @param opmode The operation mode.
  * @return t The object translation expressed with respect to relative_to_handle.
  */
-std::vector<Vector3d> DQ_VrepInterface::get_object_bbox(const int &handle, const int &relative_to_handle, const OP_MODES &opmode)
+Eigen::Array<double, 2, 3> DQ_VrepInterface::get_object_bbox(const int &handle, const int &relative_to_handle, const OP_MODES &opmode)
 {
     simxFloat local_x_min;
     const std::function<simxInt(void)> f1 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_min_x, &local_x_min,_remap_op_mode(opmode));
@@ -580,16 +580,10 @@ std::vector<Vector3d> DQ_VrepInterface::get_object_bbox(const int &handle, const
     const std::function<simxInt(void)> f6 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_max_z, &local_z_max,_remap_op_mode(opmode));
     _retry_function(f6,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
 
-    std::vector<Vector3d> bbox(8);
-    bbox[0] = Vector3d(local_x_min,local_y_min,local_z_min);
-    bbox[1] = Vector3d(local_x_min,local_y_min,local_z_max);
-    bbox[2] = Vector3d(local_x_min,local_y_max,local_z_min);
-    bbox[3] = Vector3d(local_x_min,local_y_max,local_z_max);
-    bbox[4] = Vector3d(local_x_max,local_y_min,local_z_min);
-    bbox[5] = Vector3d(local_x_max,local_y_min,local_z_max);
-    bbox[6] = Vector3d(local_x_max,local_y_max,local_z_min);
-    bbox[7] = Vector3d(local_x_max,local_y_max,local_z_max);
-    return bbox;
+    Array<double, 2, 3> bbox_array;
+    bbox_array.row(0) << local_x_min,local_y_min,local_z_min;
+    bbox_array.row(1) << local_x_max,local_y_max,local_z_max;
+    return bbox_array;
 }
 
 /**
@@ -599,7 +593,8 @@ std::vector<Vector3d> DQ_VrepInterface::get_object_bbox(const int &handle, const
  * @param opmode The operation mode.
  * @return t The object translation expressed with respect to relative_to_objectname.
  */
-std::vector<Vector3d> DQ_VrepInterface::get_object_bbox(const std::string& objectname, const std::string& relative_to_objectname, const OP_MODES& opmode)
+Eigen::Array<double, 2, 3>
+DQ_VrepInterface::get_object_bbox(const std::string& objectname, const std::string& relative_to_objectname, const OP_MODES& opmode)
 {
     if(opmode == OP_AUTOMATIC)
     {
