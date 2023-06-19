@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
-PROJECT(dqrobotics-interface-vrep)
+PROJECT(dqrobotics-interface-vrep-eaw)
 set (CMAKE_CXX_STANDARD 11)
 
 if(APPLE)
