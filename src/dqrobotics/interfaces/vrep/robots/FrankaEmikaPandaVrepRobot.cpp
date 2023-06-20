@@ -24,7 +24,7 @@ Contributors:
 
 #include<dqrobotics/interfaces/vrep/robots/FrankaEmikaPandaVrepRobot.h>
 #include<dqrobotics/utils/DQ_Constants.h>
-#include<dqrobotics/robots/FrankaEmikaPandaRobot.h>
+//#include<dqrobotics/robots/FrankaEmikaPandaRobot.h>
 
 namespace DQ_robotics
 {
@@ -41,13 +41,13 @@ FrankaEmikaPandaVrepRobot::FrankaEmikaPandaVrepRobot(const std::string& robot_na
 
 }
 
-DQ_SerialManipulatorMDH FrankaEmikaPandaVrepRobot::kinematics()
+/*DQ_SerialManipulatorMDH FrankaEmikaPandaVrepRobot::kinematics()
 {
     DQ_SerialManipulatorMDH kin = FrankaEmikaPandaRobot::kinematics();
     kin.set_reference_frame(_get_interface_ptr()->get_object_pose(base_frame_name_));
     kin.set_base_frame(_get_interface_ptr()->get_object_pose(base_frame_name_));
 
     return kin;
-}
+}*/
 
 }

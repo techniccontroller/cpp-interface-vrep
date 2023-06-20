@@ -550,6 +550,67 @@ std::vector<int> DQ_VrepInterface::get_object_handles(const std::vector<std::str
     return handles;
 }
 
+/**
+ * @brief This method gets the bounding box of an object.
+ * @param handle The handle name.
+ * @param relative_to_handle The reference handle.
+ * @param opmode The operation mode.
+ * @return t The object translation expressed with respect to relative_to_handle.
+ */
+Eigen::Array<double, 2, 3> DQ_VrepInterface::get_object_bbox(const int &handle, const int &relative_to_handle, const OP_MODES &opmode)
+{
+    simxFloat local_x_min;
+    const std::function<simxInt(void)> f1 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_min_x, &local_x_min,_remap_op_mode(opmode));
+    _retry_function(f1,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
+
+    simxFloat local_x_max;
+    const std::function<simxInt(void)> f2 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_max_x, &local_x_max,_remap_op_mode(opmode));
+    _retry_function(f2,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
+
+    simxFloat local_y_min;
+    const std::function<simxInt(void)> f3 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_min_y, &local_y_min,_remap_op_mode(opmode));
+    _retry_function(f3,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
+
+    simxFloat local_y_max;
+    const std::function<simxInt(void)> f4 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_max_y, &local_y_max,_remap_op_mode(opmode));
+    _retry_function(f4,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
+
+    simxFloat local_z_min;
+    const std::function<simxInt(void)> f5 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_min_z, &local_z_min,_remap_op_mode(opmode));
+    _retry_function(f5,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
+
+    simxFloat local_z_max;
+    const std::function<simxInt(void)> f6 = std::bind(simxGetObjectFloatParameter, clientid_, handle, sim_objfloatparam_objbbox_max_z, &local_z_max,_remap_op_mode(opmode));
+    _retry_function(f6,MAX_TRY_COUNT_,TIMEOUT_IN_MILISECONDS_,no_blocking_loops_,opmode);
+
+    Array<double, 2, 3> bbox_array;
+    bbox_array.row(0) << local_x_min,local_y_min,local_z_min;
+    bbox_array.row(1) << local_x_max,local_y_max,local_z_max;
+    return bbox_array;
+}
+
+/**
+ * @brief This method gets the bounding box of an object.
+ * @param objectname The object name.
+ * @param relative_to_objectname The name of the reference object.
+ * @param opmode The operation mode.
+ * @return t The object translation expressed with respect to relative_to_objectname.
+ */
+Eigen::Array<double, 2, 3>
+DQ_VrepInterface::get_object_bbox(const std::string& objectname, const std::string& relative_to_objectname, const OP_MODES& opmode)
+{
+    if(opmode == OP_AUTOMATIC)
+    {
+        DQ_VrepInterfaceMapElement& element = _get_element_from_map(objectname);
+        if(!element.state_from_function_signature(std::string("get_object_bbox")))
+        {
+            get_object_bbox(_get_handle_from_map(objectname),_get_handle_from_map(relative_to_objectname),OP_STREAMING);
+        }
+        return get_object_bbox(_get_handle_from_map(objectname),_get_handle_from_map(relative_to_objectname),OP_BUFFER);
+    }
+    else
+        return get_object_bbox(_get_handle_from_map(objectname),_get_handle_from_map(relative_to_objectname),opmode);
+}
 
 /**
  * @brief This method gets the translation of an object.
