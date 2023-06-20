@@ -27,6 +27,9 @@ Contributors:
 
 #include<dqrobotics/interfaces/vrep/DQ_VrepRobot.h>
 
+using namespace Eigen;
+using namespace std;
+
 namespace DQ_robotics
 {
 //Very simple strsplit

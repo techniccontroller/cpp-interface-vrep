@@ -61,6 +61,8 @@ if(APPLE)
         -ldqrobotics)
 endif()
 
+target_compile_options(${PROJECT_NAME} PUBLIC ${PCL_OPTIMIZATION_FLAGS})
+
 ################################################################
 # INSTALL HEADERS IN SUBFOLDERS
 ################################################################

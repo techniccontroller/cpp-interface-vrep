@@ -47,8 +47,8 @@ public:
     YouBotVrepRobot(const std::string& robot_name, DQ_VrepInterface* vrep_interface);
     YouBotVrepRobot(const std::string& robot_name, const std::shared_ptr<DQ_VrepInterface>& vrep_interface_sptr);
 
-    void set_configuration_space_positions(const VectorXd &q) override;
-    VectorXd get_configuration_space_positions() override;
+    void set_configuration_space_positions(const Eigen::VectorXd &q) override;
+    Eigen::VectorXd get_configuration_space_positions() override;
 
     DQ_SerialWholeBody kinematics();
 };

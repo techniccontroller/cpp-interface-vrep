@@ -48,19 +48,19 @@ protected:
 public:
     virtual std::vector<std::string> get_joint_names();
 
-    virtual void set_configuration_space_positions(const VectorXd& q) override;
-    virtual VectorXd get_configuration_space_positions() override;
-    virtual void set_target_configuration_space_positions(const VectorXd& q_target);
+    virtual void set_configuration_space_positions(const Eigen::VectorXd& q) override;
+    virtual Eigen::VectorXd get_configuration_space_positions() override;
+    virtual void set_target_configuration_space_positions(const Eigen::VectorXd& q_target);
 
-    virtual VectorXd get_configuration_space_velocities();
-    virtual void set_target_configuration_space_velocities(const VectorXd& v_target);
+    virtual Eigen::VectorXd get_configuration_space_velocities();
+    virtual void set_target_configuration_space_velocities(const Eigen::VectorXd& v_target);
 
-    virtual void set_configuration_space_torques(const VectorXd& t);
-    virtual VectorXd get_configuration_space_torques();
+    virtual void set_configuration_space_torques(const Eigen::VectorXd& t);
+    virtual Eigen::VectorXd get_configuration_space_torques();
 
     //For backwards compatibility, to be removed in a future version of dqrobotics
     [[deprecated("Use set_target_configuration_space_positions instead")]]
-    virtual void send_q_target_to_vrep(const VectorXd& q_target);
+    virtual void send_q_target_to_vrep(const Eigen::VectorXd& q_target);
 };
 }
 

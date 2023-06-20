@@ -24,6 +24,8 @@ Contributors:
 #include<dqrobotics/interfaces/vrep/DQ_SerialVrepRobot.h>
 #include<dqrobotics/utils/DQ_Constants.h>
 
+using namespace Eigen;
+
 namespace DQ_robotics
 {
 
