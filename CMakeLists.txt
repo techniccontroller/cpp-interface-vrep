@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
-PROJECT(dqrobotics-interface-vrep)
+PROJECT(dqrobotics-interface-vrep-eaw)
 set (CMAKE_CXX_STANDARD 17)
 
 option(WITH_PCL_OPTIMIZATION_FLAGS "Use optimization flags used by PCL to compile a compatible interface to EIGEN types" ON)
